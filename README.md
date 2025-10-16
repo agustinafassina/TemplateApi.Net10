@@ -1,5 +1,5 @@
-## Template.Api
-This folder contains the main API project with all controllers and configurations. It serves as the core application for client interactions.
+## Template.Api.Net!0
+This folder contains the main API project with all controllers and configurations. It serves as the core application for client interactions. It´s a copy of https://github.com/agustinafassina/TemplateApi.Net8
 
 ## 📄 API Reference
 ### Diagram
