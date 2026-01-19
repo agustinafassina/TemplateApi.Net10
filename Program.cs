@@ -1,13 +1,11 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using TemplateApi.Services;
 using TemplateApi.Services.Implementations;
 using TemplateApi.Services.Interfaces;
+using TemplateApi.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
-
-builder.Services.AddAutoMapper(typeof(TemplateApi.Mappers.ContractMapping));
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -37,6 +35,9 @@ builder.Services.AddCors(options =>
     });
 });
 
+// AutoMapper Configuration
+builder.Services.AddMappers();
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -65,6 +66,9 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddControllers();
 
+// Health Checks
+builder.Services.AddHealthChecks();
+
 var app = builder.Build();
 
 app.UseHttpsRedirection();
@@ -82,5 +86,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapControllers();
+
+// Health Check endpoint
+app.MapHealthChecks("/health");
 
 app.Run();
