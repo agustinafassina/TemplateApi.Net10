@@ -13,6 +13,30 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IItemService, ItemService>();
 
+// CORS Configuration
+var allowedOrigins = configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() 
+    ?? (builder.Environment.IsDevelopment() ? new[] { "*" } : Array.Empty<string>());
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigins", policy =>
+    {
+        if (builder.Environment.IsDevelopment() && allowedOrigins.Contains("*"))
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        }
+        else
+        {
+            policy.WithOrigins(allowedOrigins)
+                  .AllowAnyMethod()
+                  .AllowAnyHeader()
+                  .AllowCredentials();
+        }
+    });
+});
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -45,6 +69,8 @@ var app = builder.Build();
 
 app.UseHttpsRedirection();
 app.UseRouting();
+
+app.UseCors("AllowSpecificOrigins");
 
 app.UseAuthentication();
 app.UseAuthorization();
