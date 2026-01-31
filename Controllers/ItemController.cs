@@ -29,15 +29,7 @@ namespace TemplateApi.Controllers
             return Ok("v.1.0.0");
         }
 
-        [HttpGet("v2/version")]
-        public IActionResult GetVersionv2()
-        {
-            _logger.LogInformation("GetVersionv2 endpoint called");
-            return Ok("v.2.0.0");
-        }
-
-
-        [HttpGet("items")]
+        [HttpGet("test")]
         public IActionResult GetItems()
         {
             _logger.LogInformation("GetItems endpoint called");
@@ -54,7 +46,7 @@ namespace TemplateApi.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("test/{id}")]
         public IActionResult GetById(int id)
         {
             _logger.LogInformation("GetById endpoint called with id: {ItemId}", id);
