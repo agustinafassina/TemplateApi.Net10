@@ -133,6 +133,7 @@ namespace TemplateApi.Middleware
             };
 
             var json = JsonSerializer.Serialize(problemDetails, options);
+
             return response.WriteAsync(json);
         }
     }

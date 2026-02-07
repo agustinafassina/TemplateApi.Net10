@@ -130,7 +130,6 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-
 builder.Services.AddControllers();
 
 // Health Checks
