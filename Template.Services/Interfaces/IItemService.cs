@@ -1,6 +1,6 @@
-using TemplateApi.Models.Dto;
+using Template.Models.Dto;
 
-namespace TemplateApi.Services.Interfaces
+namespace Template.Services.Interfaces
 {
     public interface IItemService
     {

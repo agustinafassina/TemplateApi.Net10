@@ -7,12 +7,18 @@ It´s a copy of https://github.com/agustinafassina/TemplateApi.Net8
 - 🧰 .NET 10 SDK
 - 🐳 (Optional) Docker
 
-## Main contents 📦
-- `Program.cs`: application entry point and service configuration.
-- `Controllers/`: REST controllers (e.g., `ItemController`).
-- `Services/`: business logic and interfaces.
-- `Middleware/`: global handlers (e.g., `GlobalExceptionHandlerMiddleware`).
-- `appsettings.json` / `appsettings.Development.json`: environment-specific configuration.
+## Solution structure 📦 (MVC + OOP)
+- **Template.Api**: entry point, controllers, configs (Swagger, AutoMapper), middleware, validators, request contracts.
+- **Template.Services**: application services and interfaces; registered via `AddApplicationServices()`.
+- **Template.Repository**: data access (repositories); registered via `AddRepositories()`.
+- **Template.Models**: DTOs and shared models.
+
+## Dependency Injection (DI) 🔌
+Repositories and services are registered with extension methods so `Program.cs` stays clean:
+- `builder.Services.AddRepositories();` — registers all repository interfaces/implementations.
+- `builder.Services.AddApplicationServices();` — registers all application services (depends on repositories).
+
+Lifetimes: repositories use **Singleton** for in-memory store; when you switch to Entity Framework, use **Scoped** for `DbContext` and repository implementations.
 
 ## Run locally ▶️
 1. Restore and build:
@@ -22,7 +28,7 @@ dotnet build
 
 2. Run the API:
 ```
-dotnet run --project TemplateApi.csproj
+dotnet run --project Template.Api
 ```
 
 By default, when running in Development, Swagger should be available at `http://localhost:{port}/swagger`.
@@ -53,6 +59,9 @@ And in controllers you can use:
 [Authorize(AuthenticationSchemes = "Auth0App1")]
 [Authorize(AuthenticationSchemes = "Auth0App2")]
 ```
+
+## Request validation ✅
+The API uses **FluentValidation** for request DTOs (e.g. `ItemCreateDto`). Validators live in `Template.Api/Validators/` and are registered in DI; controllers inject `IValidator<T>` and validate before calling services.
 
 ## Configuration ⚙️
 - Use `appsettings.json` and `appsettings.Development.json` for environment-specific values.

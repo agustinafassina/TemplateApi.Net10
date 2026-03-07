@@ -1,12 +1,12 @@
-using TemplateApi.Mappers;
+using Template.Api.Mappers;
 
-namespace TemplateApi.Configurations
+namespace Template.Api.Configurations
 {
     public static class AutoMapperConfiguration
     {
         public static void AddMappers(this IServiceCollection services)
         {
-            services.AddAutoMapper(new Type[] { typeof(ContractMapping) });
+            services.AddAutoMapper(typeof(ContractMapping));
         }
     }
 }

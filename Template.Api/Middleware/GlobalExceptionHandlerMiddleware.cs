@@ -1,10 +1,9 @@
 using System.Net;
 using System.Text.Json;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
-namespace TemplateApi.Middleware
+namespace Template.Api.Middleware
 {
     public class GlobalExceptionHandlerMiddleware
     {
@@ -43,8 +42,7 @@ namespace TemplateApi.Middleware
                 Detail = exception.Message
             };
 
-            // Handle Authorization exceptions
-            if (exception is SecurityTokenException || exception is UnauthorizedAccessException)
+            if (exception is SecurityTokenException or UnauthorizedAccessException)
             {
                 response.StatusCode = (int)HttpStatusCode.Unauthorized;
                 problemDetails.Status = (int)HttpStatusCode.Unauthorized;
@@ -72,7 +70,7 @@ namespace TemplateApi.Middleware
                 problemDetails.Title = "Token Validation Failed";
                 problemDetails.Detail = "The provided token failed validation.";
             }
-            else if (exception is ArgumentNullException argNullEx && 
+            else if (exception is ArgumentNullException argNullEx &&
                      (argNullEx.ParamName?.Contains("token", StringComparison.OrdinalIgnoreCase) == true ||
                       argNullEx.ParamName?.Contains("authorization", StringComparison.OrdinalIgnoreCase) == true))
             {
@@ -81,8 +79,7 @@ namespace TemplateApi.Middleware
                 problemDetails.Title = "Missing Authentication";
                 problemDetails.Detail = "Authentication token is required but was not provided.";
             }
-            else if (exception is ArgumentException argEx && 
-                     argEx.Message.Contains("token", StringComparison.OrdinalIgnoreCase))
+            else if (exception is ArgumentException argEx && argEx.Message.Contains("token", StringComparison.OrdinalIgnoreCase))
             {
                 response.StatusCode = (int)HttpStatusCode.Unauthorized;
                 problemDetails.Status = (int)HttpStatusCode.Unauthorized;
@@ -110,7 +107,7 @@ namespace TemplateApi.Middleware
                 problemDetails.Title = "Invalid Argument";
                 problemDetails.Detail = exception.Message;
             }
-            else if (exception is InvalidOperationException invalidOpEx && 
+            else if (exception is InvalidOperationException invalidOpEx &&
                      invalidOpEx.Message.Contains("MetadataAddress", StringComparison.OrdinalIgnoreCase))
             {
                 response.StatusCode = (int)HttpStatusCode.BadRequest;
@@ -120,22 +117,14 @@ namespace TemplateApi.Middleware
             }
             else
             {
-                // Generic server error - don't expose internal details in production
                 response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 problemDetails.Status = (int)HttpStatusCode.InternalServerError;
                 problemDetails.Title = "Internal Server Error";
                 problemDetails.Detail = "An unexpected error occurred. Please try again later.";
             }
 
-            var options = new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-            };
-
-            var json = JsonSerializer.Serialize(problemDetails, options);
-
+            var json = JsonSerializer.Serialize(problemDetails, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
             return response.WriteAsync(json);
         }
     }
 }
-

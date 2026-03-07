@@ -1,4 +1,4 @@
-namespace TemplateApi.Models.Dto
+namespace Template.Models.Dto
 {
     public class ItemCreateDto
     {
