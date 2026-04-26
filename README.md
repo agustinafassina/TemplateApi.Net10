@@ -8,7 +8,7 @@ It´s a copy of https://github.com/agustinafassina/TemplateApi.Net8
 - 🐳 (Optional) Docker
 
 ## Solution structure 📦 (MVC + OOP)
-- **Template.Api**: entry point, controllers, configs (Swagger, AutoMapper), middleware, validators, request contracts.
+- **Template.Api**: entry point, controllers, configs (Swagger, Mapperly), middleware, validators, request contracts.
 - **Template.Services**: application services and interfaces; registered via `AddApplicationServices()`.
 - **Template.Repository**: data access (repositories); registered via `AddRepositories()`.
 - **Template.Models**: DTOs and shared models.
