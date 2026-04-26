@@ -1,4 +1,3 @@
-using AutoMapper;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,18 +11,15 @@ namespace Template.Api.Controllers
     public class ItemController : ControllerBase
     {
         private readonly IItemService _itemService;
-        private readonly IMapper _mapper;
         private readonly IValidator<ItemCreateDto> _createValidator;
         private readonly ILogger<ItemController> _logger;
 
         public ItemController(
             IItemService itemService,
-            IMapper mapper,
             IValidator<ItemCreateDto> createValidator,
             ILogger<ItemController> logger)
         {
             _itemService = itemService;
-            _mapper = mapper;
             _createValidator = createValidator;
             _logger = logger;
         }

@@ -1,7 +1,6 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Template.Api.Configurations;
 using Template.Api.Middleware;
 using Template.Api.Validators;
 using Template.Repository;
@@ -43,9 +42,6 @@ builder.Services.AddCors(options =>
         }
     });
 });
-
-// AutoMapper
-builder.Services.AddMappers();
 
 // Authentication
 builder.Services.AddAuthentication(options =>
