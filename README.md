@@ -12,6 +12,27 @@ It´s a copy of https://github.com/agustinafassina/TemplateApi.Net8
 - **Template.Services**: application services and interfaces; registered via `AddApplicationServices()`.
 - **Template.Repository**: data access (repositories); registered via `AddRepositories()`.
 - **Template.Models**: DTOs and shared models.
+- **TemplateApi.Unittests**: xUnit unit tests for `Template.Services` (project file: `TemplateApi.Tests.csproj`).
+
+## Unit tests 🧪
+From the repository root (same folder as `TemplateApi.sln`):
+
+```
+dotnet test
+```
+
+Run only the test project:
+
+```
+dotnet test TemplateApi.Unittests/TemplateApi.Tests.csproj
+```
+
+Optional: verbose output or filter by display name:
+
+```
+dotnet test --verbosity normal
+dotnet test --filter "FullyQualifiedName~ItemServiceTests"
+```
 
 ## Dependency Injection (DI) 🔌
 Repositories and services are registered with extension methods so `Program.cs` stays clean:
