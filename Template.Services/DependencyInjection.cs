@@ -11,6 +11,7 @@ namespace Template.Services
         {
             services.AddSingleton<ItemMapper>();
             services.AddTransient<IItemService, ItemService>();
+            services.AddTransient<IItemCatalogService, ItemCatalogService>();
             return services;
         }
     }

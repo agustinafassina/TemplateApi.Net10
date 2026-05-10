@@ -1,7 +1,7 @@
 /obj
 /bin
-/Template.Unitests/bin
-/Template.Unitests/obj
+/Template.UnitTests/bin
+/Template.UnitTests/obj
 /Template.Api/bin
 /Template.Api/obj
 Template.Repository/bin
