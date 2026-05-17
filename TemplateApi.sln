@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Template.Services", "Templa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Template.Api", "Template.Api\Template.Api.csproj", "{A1B2C3D4-4444-5555-6666-444444444444}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TemplateApi.Tests", "TemplateApi.Unittests\TemplateApi.Tests.csproj", "{9FAD6C82-0F1D-4618-A20D-E707BA5005C7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TemplateApi.Tests", "Template.Unittests\TemplateApi.Tests.csproj", "{9FAD6C82-0F1D-4618-A20D-E707BA5005C7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
