@@ -1,7 +1,7 @@
 ## TemplateApi (.NET 10) ✨
 Starter Web API template using .NET 10 with example controllers, services, mapping and middleware. It provides a foundation for building Web APIs with JWT authentication, global exception handling, and Swagger.<br>
 Status: template ready for customization. <br>
-It´s a copy of https://github.com/agustinafassina/TemplateApi.Net8
+Forked from https://github.com/agustinafassina/TemplateApi.Net8
 
 ## Requirements ✅
 - 🧰 .NET 10 SDK
@@ -54,14 +54,14 @@ dotnet run --project Template.Api
 
 By default, when running in Development, Swagger should be available at `http://localhost:{port}/swagger`.
 
-## CI/CD — GitHub Actions (AWS OIDC · ECR · ECS) 🚀
+## CI/CD — GitHub Actions (AWS OIDC · ECR) 🚀
 
 Workflow: [`.github/workflows/aws-ecr-ecs.yml`](.github/workflows/aws-ecr-ecs.yml)
 
 | Branch / event | What runs |
 |----------------|-----------|
 | PR → `main` | Lint (`dotnet format`), build, unit tests, Semgrep, TruffleHog |
-| Push → `main` | Same + Docker build, push to ECR, ECS deploy (placeholder) |
+| Push → `main` | Same + Docker build and push to ECR |
 
 Setup (OIDC trust policy, IAM, GitHub variables): [`.github/aws/README.md`](.github/aws/README.md).
 
@@ -102,26 +102,24 @@ The API uses **FluentValidation** for request DTOs (e.g. `ItemCreateDto`). Valid
 - Environment variables prefixed with `ASPNETCORE_` affect host behavior.
 
 ## Example: Version endpoint ⚡
-
 This template exposes a simple version endpoint in `ItemController`.
 
 - Request:
 
-  ```
-  GET /api/v1/item/version
-  ```
+```
+GET /api/v1/item/version
+```
 
 - curl example:
 
-  ```bash
-  curl -i http://localhost:5000/api/v1/item/version
-  ```
+```bash
+curl -i http://localhost:5000/api/v1/item/version
+```
 
 - Response 200 (example):
-
-  ```json
-  "v.1.0.0"
-  ```
+```json
+"v.1.0.0"
+```
 
 ## Contributing 🤝
 1. Fork the repo
