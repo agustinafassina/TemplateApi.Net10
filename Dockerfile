@@ -6,6 +6,7 @@ COPY Template.Models/*.csproj Template.Models/
 COPY Template.Repository/*.csproj Template.Repository/
 COPY Template.Services/*.csproj Template.Services/
 COPY Template.Api/*.csproj Template.Api/
+COPY Template.UnitTests/*.csproj Template.UnitTests/
 
 RUN dotnet restore TemplateApi.sln
 
