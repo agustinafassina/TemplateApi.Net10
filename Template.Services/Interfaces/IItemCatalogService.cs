@@ -1,10 +1,9 @@
 using Template.Models.Dto;
 
-namespace Template.Services.Interfaces
+namespace Template.Services.Interfaces;
+
+public interface IItemCatalogService
 {
-    public interface IItemCatalogService
-    {
-        IReadOnlyList<ItemDto> GetItemsOrderedByName();
-        int GetItemCount();
-    }
+    Task<IReadOnlyList<ItemDto>> GetItemsOrderedByNameAsync(CancellationToken cancellationToken = default);
+    Task<int> GetItemCountAsync(CancellationToken cancellationToken = default);
 }

@@ -9,7 +9,7 @@ namespace Template.UnitTests.Services;
 public class ItemCatalogServiceTests
 {
     [Fact]
-    public void GetItemsOrderedByName_sorts_by_name_ordinal()
+    public async Task GetItemsOrderedByNameAsync_sorts_by_name_ordinal()
     {
         var items = new List<ItemDto>
         {
@@ -18,11 +18,11 @@ public class ItemCatalogServiceTests
             new() { Id = 3, Name = "Banana" }
         };
         var mockRepo = new Mock<IItemRepository>();
-        mockRepo.Setup(r => r.GetAll()).Returns(items);
+        mockRepo.Setup(r => r.GetAllAsync(It.IsAny<CancellationToken>())).ReturnsAsync(items);
 
         var sut = new ItemCatalogService(mockRepo.Object, NullLogger<ItemCatalogService>.Instance);
 
-        var result = sut.GetItemsOrderedByName();
+        IReadOnlyList<ItemDto>? result = await sut.GetItemsOrderedByNameAsync();
 
         Assert.Equal(3, result.Count);
         Assert.Equal("Banana", result[0].Name);
@@ -31,7 +31,7 @@ public class ItemCatalogServiceTests
     }
 
     [Fact]
-    public void GetItemCount_returns_number_of_items()
+    public async Task GetItemCountAsync_returns_number_of_items()
     {
         var items = new List<ItemDto>
         {
@@ -39,22 +39,22 @@ public class ItemCatalogServiceTests
             new() { Id = 2, Name = "Two" }
         };
         var mockRepo = new Mock<IItemRepository>();
-        mockRepo.Setup(r => r.GetAll()).Returns(items);
+        mockRepo.Setup(r => r.GetAllAsync(It.IsAny<CancellationToken>())).ReturnsAsync(items);
 
         var sut = new ItemCatalogService(mockRepo.Object, NullLogger<ItemCatalogService>.Instance);
 
-        Assert.Equal(2, sut.GetItemCount());
-        mockRepo.Verify(r => r.GetAll(), Times.Once);
+        Assert.Equal(2, await sut.GetItemCountAsync());
+        mockRepo.Verify(r => r.GetAllAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
-    public void GetItemCount_empty_repository_returns_zero()
+    public async Task GetItemCountAsync_empty_repository_returns_zero()
     {
         var mockRepo = new Mock<IItemRepository>();
-        mockRepo.Setup(r => r.GetAll()).Returns(Array.Empty<ItemDto>());
+        mockRepo.Setup(r => r.GetAllAsync(It.IsAny<CancellationToken>())).ReturnsAsync(Array.Empty<ItemDto>());
 
         var sut = new ItemCatalogService(mockRepo.Object, NullLogger<ItemCatalogService>.Instance);
 
-        Assert.Equal(0, sut.GetItemCount());
+        Assert.Equal(0, await sut.GetItemCountAsync());
     }
 }

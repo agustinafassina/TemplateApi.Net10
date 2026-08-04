@@ -1,28 +1,45 @@
+using System.Collections.Concurrent;
 using Template.Models.Dto;
 using Template.Repository.Interfaces;
 
-namespace Template.Repository.Implementations
+namespace Template.Repository.Implementations;
+
+public class ItemRepository : IItemRepository
 {
-    public class ItemRepository : IItemRepository
+    private readonly ConcurrentDictionary<int, ItemDto> _items = new();
+    private int _nextId;
+
+    public ItemRepository()
     {
-        private readonly List<ItemDto> _items = new();
+        _items[1] = new ItemDto { Id = 1, Name = "Item 1" };
+        _items[2] = new ItemDto { Id = 2, Name = "Item 2" };
+        _nextId = 2;
+    }
 
-        public ItemRepository()
-        {
-            _items.Add(new ItemDto { Id = 1, Name = "Item 1" });
-            _items.Add(new ItemDto { Id = 2, Name = "Item 2" });
-        }
+    public Task<IReadOnlyList<ItemDto>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        IReadOnlyList<ItemDto> snapshot = _items.Values.OrderBy(i => i.Id).ToList();
+        return Task.FromResult(snapshot);
+    }
 
-        public IEnumerable<ItemDto> GetAll() => _items;
+    public Task<ItemDto?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        _items.TryGetValue(id, out var item);
+        return Task.FromResult(item);
+    }
 
-        public ItemDto? GetById(int id) => _items.FirstOrDefault(i => i.Id == id);
+    public Task<ItemDto> AddAsync(ItemDto item, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        ArgumentNullException.ThrowIfNull(item);
 
-        public ItemDto Add(ItemDto item)
-        {
-            var newId = _items.Any() ? _items.Max(i => i.Id) + 1 : 1;
-            var newItem = new ItemDto { Id = newId, Name = item.Name };
-            _items.Add(newItem);
-            return newItem;
-        }
+        int newId = Interlocked.Increment(ref _nextId);
+        var newItem = new ItemDto { Id = newId, Name = item.Name };
+        if (!_items.TryAdd(newId, newItem))
+            throw new InvalidOperationException($"Failed to add item with id {newId}.");
+
+        return Task.FromResult(newItem);
     }
 }
