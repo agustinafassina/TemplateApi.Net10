@@ -1,0 +1,48 @@
+---
+description: Repo-specific conventions for TemplateApi.Net10 so the agent doesn't repeat mistakes
+alwaysApply: true
+---
+
+# TemplateApi.Net10 — Project Conventions
+
+This is a **.NET 10 layered Web API template**. Respect these conventions on every task.
+
+## Documentation & README 📝
+- **Keep the emoji/icons in section headers** (e.g. `## Requirements ✅`, `## Docker 🐳`). Never strip them when editing docs.
+- Preserve the existing tone and structure of `README.md`. When adding a feature, add/update its section with a matching icon.
+- Keep both `README.md` and `.github/aws/README.md` in sync with actual behavior.
+
+## Architecture (layered, MVC + OOP)
+- Projects and their roles — do not blur these boundaries:
+  - `Template.Api` → presentation: controllers, middleware, validators, config.
+  - `Template.Services` → application/business logic + Mapperly mappers.
+  - `Template.Repository` → data access (currently in-memory).
+  - `Template.Models` → DTOs / shared contracts.
+  - `Template.Unittests` (`TemplateApi.Tests.csproj`) → xUnit tests for services.
+- Dependency direction: `Api → Services → Repository → Models`. Never reference upward.
+
+## Dependency Injection 🔌
+- Register via extension methods to keep `Program.cs` clean: `AddRepositories()` and `AddApplicationServices()`.
+- In-memory repositories are **Singleton**. If migrating to EF Core, switch `DbContext` and repositories to **Scoped**.
+
+## Mapping, validation, errors
+- Use **Mapperly** (not AutoMapper) for DTO mapping.
+- Use **FluentValidation** for request DTOs; validators live in `Template.Api/Validators/` and are injected as `IValidator<T>`.
+- Errors flow through `GlobalExceptionHandlerMiddleware` as ProblemDetails JSON — route new error handling through it.
+
+## Auth 🔐
+- JWT Bearer with named schemes (`Auth0App1`, `Auth0App2`) from config/env. Protect endpoints with `[Authorize(AuthenticationSchemes = "Auth0App1")]`.
+- Never hardcode issuers/audiences/secrets; use config or environment variables.
+
+## Docs endpoint & Docker 🐳
+- Swagger is enabled in **Development only** — keep it that way unless asked.
+- Docker targets `dotnet/aspnet:10.0-alpine` on port 80.
+
+## CI/CD 🚀
+- Primary pipeline: `.github/workflows/aws-ecr-ecs.yml` (GitHub Actions, AWS OIDC → ECR, ECS deploy is a placeholder).
+- Keep AWS setup files under `.github/aws/` consistent (`oidc-trust-policy.json`, `iam-policy-ecr.json`, `ecs-task-definition.json`).
+- Azure DevOps pipelines under `azure-pipelines/` are legacy — don't remove without being asked.
+
+## Before finishing
+- This is a **template**: keep changes minimal, generic and reusable; avoid app-specific business logic.
+- Run `dotnet format`, `dotnet build` and `dotnet test` expectations in mind (the CI enforces them).

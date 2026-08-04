@@ -14,26 +14,6 @@ Forked from https://github.com/agustinafassina/TemplateApi.Net8
 - **Template.Models**: DTOs and shared models.
 - **Template.Unittests**: xUnit unit tests for `Template.Services` (project file: `TemplateApi.Tests.csproj`).
 
-## Unit tests 🧪
-From the repository root (same folder as `TemplateApi.sln`):
-
-```
-dotnet test
-```
-
-Run only the test project:
-
-```
-dotnet test Template.Unittests/TemplateApi.Tests.csproj
-```
-
-Optional: verbose output or filter by display name:
-
-```
-dotnet test --verbosity normal
-dotnet test --filter "FullyQualifiedName~ItemServiceTests"
-```
-
 ## Dependency Injection (DI) 🔌
 Repositories and services are registered with extension methods so `Program.cs` stays clean:
 - `builder.Services.AddRepositories();` — registers all repository interfaces/implementations.
@@ -54,26 +34,28 @@ dotnet run --project Template.Api
 
 By default, when running in Development, Swagger should be available at `http://localhost:{port}/swagger`.
 
-## CI/CD — GitHub Actions (AWS OIDC · ECR) 🚀
+## Unit tests 🧪
+From the repository root (same folder as `TemplateApi.sln`):
 
-Workflow: [`.github/workflows/aws-ecr-ecs.yml`](.github/workflows/aws-ecr-ecs.yml)
-
-| Branch / event | What runs |
-|----------------|-----------|
-| PR → `main` | Lint (`dotnet format`), build, unit tests, Semgrep, TruffleHog |
-| Push → `main` | Same + Docker build and push to ECR |
-
-Setup (OIDC trust policy, IAM, GitHub variables): [`.github/aws/README.md`](.github/aws/README.md).
-
-Azure DevOps pipelines remain under [`azure-pipelines/`](azure-pipelines/).
-
-## Docker 🐳
-Build the image and run the container:
 ```
-docker build -f Dockerfile -t templateapi:latest .
-docker run -d -p 8787:80 -e "ASPNETCORE_ENVIRONMENT=Development" --name templateapi templateapi:latest
-# Swagger: http://localhost:8787/swagger/index.html
+dotnet test
 ```
+
+Run only the test project:
+
+```
+dotnet test Template.Unittests/TemplateApi.Tests.csproj
+```
+
+Optional: verbose output or filter by display name:
+
+```
+dotnet test --verbosity normal
+dotnet test --filter "FullyQualifiedName~ItemServiceTests"
+```
+
+## Request validation ✅
+The API uses **FluentValidation** for request DTOs (e.g. `ItemCreateDto`). Validators live in `Template.Api/Validators/` and are registered in DI; controllers inject `IValidator<T>` and validate before calling services.
 
 ## Authentication (JWT / Auth0 example) 🔐
 The template includes support for JWT authentication. Configure the values in `appsettings.json` or via environment variables. Example JSON configuration:
@@ -93,9 +75,6 @@ And in controllers you can use:
 [Authorize(AuthenticationSchemes = "Auth0App1")]
 [Authorize(AuthenticationSchemes = "Auth0App2")]
 ```
-
-## Request validation ✅
-The API uses **FluentValidation** for request DTOs (e.g. `ItemCreateDto`). Validators live in `Template.Api/Validators/` and are registered in DI; controllers inject `IValidator<T>` and validate before calling services.
 
 ## Configuration ⚙️
 - Use `appsettings.json` and `appsettings.Development.json` for environment-specific values.
@@ -119,6 +98,26 @@ curl -i http://localhost:5000/api/v1/item/version
 - Response 200 (example):
 ```json
 "v.1.0.0"
+```
+
+## Code style & Cursor rules 🧭
+Shared formatting and AI conventions so humans, the IDE, CI and Cursor stay aligned.
+
+### EditorConfig ✨
+[`.editorconfig`](.editorconfig) defines charset, line endings, indentation and C# style/naming (e.g. private fields with `_`). Editors that support EditorConfig and `dotnet format` (used in CI on PRs) follow these rules.
+
+### Cursor AI rules 🤖
+This template ships with Cursor rules so the AI follows the project conventions and C# best practices.
+- Active rules live in [`.cursor/rules/`](.cursor/rules/): `csharp.mdc` (C# standards, applies to `**/*.cs`) and `project-conventions.mdc` (repo conventions, always applied).
+- A copy is kept under [`templates/cursor-rules/`](templates/cursor-rules/) so anyone forking this template can restore them: copy the files into `.cursor/rules/`.
+- When you change a rule, update **both** folders so the backup stays in sync.
+
+## Docker 🐳
+Build the image and run the container:
+```
+docker build -f Dockerfile -t templateapi:latest .
+docker run -d -p 8787:80 -e "ASPNETCORE_ENVIRONMENT=Development" --name templateapi templateapi:latest
+# Swagger: http://localhost:8787/swagger/index.html
 ```
 
 ## Contributing 🤝
