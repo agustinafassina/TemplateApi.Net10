@@ -1,11 +1,10 @@
 using Template.Models.Dto;
 
-namespace Template.Services.Interfaces
+namespace Template.Services.Interfaces;
+
+public interface IItemService
 {
-    public interface IItemService
-    {
-        IEnumerable<ItemDto> GetAllItems();
-        ItemDto? GetItemById(int id);
-        ItemDto CreateItem(ItemCreateDto newItem);
-    }
+    Task<IReadOnlyList<ItemDto>> GetAllItemsAsync(CancellationToken cancellationToken = default);
+    Task<ItemDto?> GetItemByIdAsync(int id, CancellationToken cancellationToken = default);
+    Task<ItemDto> CreateItemAsync(ItemCreateDto newItem, CancellationToken cancellationToken = default);
 }

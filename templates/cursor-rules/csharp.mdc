@@ -1,0 +1,96 @@
+---
+description: C# best practices and coding standards for this .NET 10 template
+globs: **/*.cs
+alwaysApply: false
+---
+
+# C# Best Practices 🔷
+
+Follow these when writing or reviewing any C# code.
+
+## 1. Naming conventions 🏷️
+- `PascalCase` for classes, methods, properties, constants, namespaces.
+- `camelCase` for locals, parameters and private fields.
+- Prefix private fields with `_` (e.g. `_userService`).
+- Descriptive names; avoid ambiguous abbreviations.
+
+## 2. Variables & types 📐
+- Use `var` when the type is obvious; explicit types when they improve readability.
+- Initialize variables at declaration when possible.
+- Prefer `readonly` / `const` for values that never change:
+```csharp
+private readonly IUserService _userService;
+private const int MaxRetries = 3;
+```
+
+## 3. Classes & encapsulation 🧩
+- Small classes, single responsibility (SRP).
+- Properties (not public fields) when logic/validation is needed.
+- Prefer immutability: `record`, `init`-only properties.
+```csharp
+public record User(string Name, string Email);
+```
+
+## 4. Methods ⚙️
+- Short, focused on one task; verb-based names (`GetUserById`, `ValidateInput`).
+- Max 3-4 params; group into objects/records otherwise.
+- Expression-bodied members (`=>`) for one-liners.
+
+## 5. Error handling ❌
+- `try-catch` only where the error can be handled meaningfully.
+- Be specific with exception types; don't swallow generic `Exception`.
+- Re-throw with `throw;` (never `throw ex;`) to preserve the stack trace.
+- Validate params with `ArgumentException` / `ArgumentNullException`; custom exceptions when they add value.
+
+## 6. Null safety 🕳️
+- Use nullable reference types: `string?` for values that may be null.
+- Prefer `?.` and `??`: `var name = user?.Name ?? "Unknown";`
+- Avoid null where possible.
+
+## 7. LINQ & collections 🔗
+- Prefer LINQ over loops when it improves readability.
+- Materialize (`ToList()`/`ToArray()`) only when needed; avoid multiple iterations over the same query.
+- Use immutable collections when data won't change.
+
+## 8. Async & await ⏳
+- `async`/`await` for I/O; avoid `async void` (except event handlers).
+- Accept a `CancellationToken` in async methods.
+- `ConfigureAwait(false)` in libraries.
+- Suffix async methods with `Async` (`GetUserByIdAsync`).
+
+## 9. Dependency Injection 💉
+- Inject via constructor; avoid `new` for testable dependencies.
+- Register services in DI (here via `AddApplicationServices()` / `AddRepositories()`).
+- Depend on interfaces, not concrete types.
+- `Scoped` for `DbContext`, `Transient` for stateless services, `Singleton` with care.
+
+## 10. Comments & docs 📝
+- XML comments (`///`) on public APIs and complex methods; document params, returns, thrown exceptions.
+- No comments that state the obvious; code should be self-explanatory.
+- `TODO`/`FIXME` with clear context.
+
+## 11. Security 🔒
+- Never hardcode secrets/keys; use User Secrets, env vars or Key Vault.
+- Validate and sanitize all user input.
+- Parameterized SQL queries; least-privilege permissions.
+
+## 12. Testing 🧪
+- Unit test critical business logic; mock dependencies (no real I/O).
+- Names: `MethodName_Scenario_ExpectedBehavior`.
+- Structure with AAA (Arrange, Act, Assert).
+
+## 13. Performance ⚡
+- Avoid unnecessary boxing; use generics.
+- `StringBuilder` for string concatenation in loops.
+- Consider `Span<T>`/`Memory<T>` for buffers; object pooling for hot allocations.
+
+## 14. Structure & organization 📂
+- One class per file; file name matches class name.
+- Namespaces mirror folder structure.
+- Separate concerns: Controllers, Services, Repositories, Models, DTOs.
+- DTO = data passed between layers; Entities = DB tables. Keep layers in separate projects.
+
+## 15. Readability & formatting ✨
+- Use regions sparingly; prefer smaller files.
+- Group related members; consistent formatting (`.editorconfig`).
+- Keep files small (~200-300 lines) for easy navigation.
