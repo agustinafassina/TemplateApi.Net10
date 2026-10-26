@@ -124,6 +124,3 @@ docker run -d -p 8787:80 -e "ASPNETCORE_ENVIRONMENT=Development" --name template
 1. Fork the repo
 2. Create a branch (`feature/name`)
 3. Open a Pull Request describing your changes
-
-## License 📜
-This repository is a template created by Agustina Fassina.
